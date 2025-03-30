@@ -9,12 +9,10 @@ import torch
 import numpy as np
 import torch.utils.tensorboard as tb
 
-# from runners.diffusion import Diffusion
 from runners.diffusion import Diffusion
 
 torch.set_printoptions(sci_mode=False)
 
-# os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
 def parse_args_and_config():
     parser = argparse.ArgumentParser(description=globals()["__doc__"])
@@ -22,30 +20,31 @@ def parse_args_and_config():
     parser.add_argument(
         "--config", type=str, required=True, help="Path to the config file"
     )
-    parser.add_argument("--seed", type=int, default=1234, help="Set different seeds for diverse results")
+    parser.add_argument("--seed", type=int, default=1234, help="Random seed")
     parser.add_argument(
         "--exp", type=str, default="exp", help="Path for saving running related data."
     )
     parser.add_argument(
-        "--deg", type=str, required=True, help="Degradation"
-    )
-    parser.add_argument(
-        "--path_y",
+        "--doc",
         type=str,
         required=True,
-        help="Path of the test dataset.",
+        help="A string for documentation purpose. "
+        "Will be the name of the log folder.",
     )
     parser.add_argument(
-        "--sigma_y", type=float, default=0., help="sigma_y"
+        "--comment", type=str, default="", help="A string for experiment comment"
     )
     parser.add_argument(
-        "--eta", type=float, default=0.85, help="Eta"
-    )    
+        "--verbose",
+        type=str,
+        default="info",
+        help="Verbose level: info | debug | warning | critical",
+    )
     parser.add_argument(
-        "--simplified",
+        "--sample",
         action="store_true",
-        help="Use simplified DDNM, without SVD",
-    )    
+        help="Whether to produce samples from the model",
+    )
     parser.add_argument(
         "-i",
         "--image_folder",
@@ -54,18 +53,12 @@ def parse_args_and_config():
         help="The folder name of samples",
     )
     parser.add_argument(
-        "--deg_scale", type=float, default=0., help="deg_scale"
-    )    
-    parser.add_argument(
-        "--verbose",
-        type=str,
-        default="info",
-        help="Verbose level: info | debug | warning | critical",
-    )
-    parser.add_argument(
         "--ni",
         action="store_true",
         help="No interaction. Suitable for Slurm Job launcher",
+    )
+    parser.add_argument(
+        "--deg", type=str, required=True, help="Degradation"
     )
     parser.add_argument(
         '--subset_start', type=int, default=-1
@@ -74,62 +67,23 @@ def parse_args_and_config():
         '--subset_end', type=int, default=-1
     )
     parser.add_argument(
-        "-n",
-        "--noise_type",
-        type=str,
-        default="gaussian",
-        help="gaussian | 3d_gaussian | poisson | speckle"
+        '--steps', type=int, default=100
     )
     parser.add_argument(
-        "--add_noise",
-        action="store_true"
+        '--outfile', type=str, default="result.txt"
     )
-    parser.add_argument(
-        '--ddim_T', type=int, default=100
-    )
-    parser.add_argument(
-        '--target_steps', type=int, default=10
-    )
-    parser.add_argument(
-        '--eval_model_idx', type=int, default=0
-    )
-    parser.add_argument(
-        '--eval_model_name', type=str, default=''
-    )
-    parser.add_argument(
-        '--second_stage', action="store_true"
-    )
-    parser.add_argument(
-        '--baseline', action="store_true"
-    )
-    parser.add_argument(
-        '--subtask1', action="store_true"
-    )
-    parser.add_argument(
-        "--ablation",
-        type=str,
-        default="none",
-        help="baseline | subtask1_conti | subtask2 | compare | dense | percent"
-    )
-
-    parser.add_argument(
-        "--finetune",
-        type=int,
-        default=0,
-        help="finetune 1 on | 0 off"
-    )
-    parser.add_argument("--input_root", type=str, default="/tmp2/ICML2025", help="The root folder of input images")
-    
 
 
     args = parser.parse_args()
+    args.log_path = os.path.join(args.exp, "logs", args.doc)
 
     # parse config file
     with open(os.path.join("configs", args.config), "r") as f:
         config = yaml.safe_load(f)
     new_config = dict2namespace(config)
 
-    level = getattr(logging, args.verbose.upper(), None)
+
+    level = getattr(logging, args.verbose.upper(), None) 
     if not isinstance(level, int):
         raise ValueError("level {} not supported".format(args.verbose))
 
@@ -178,8 +132,7 @@ def parse_args_and_config():
         torch.cuda.manual_seed_all(args.seed)
 
     torch.backends.cudnn.benchmark = True
-    # new_config.time_travel.T_sampling = args.ddim_T
-    print('T_sampling:', args.ddim_T)
+
     return args, new_config
 
 
@@ -196,10 +149,19 @@ def dict2namespace(config):
 
 def main():
     args, config = parse_args_and_config()
+    config.deblur.timesteps = args.steps
+    with open(args.outfile, 'a') as f:
+        pass
+    sys.stdout = open(args.outfile, 'a')
+    print("Denoising with {} steps".format(args.steps))
+    
+    logging.info("Writing log file to {}".format(args.log_path))
+    logging.info("Exp instance id = {}".format(os.getpid()))
+    logging.info("Exp comment = {}".format(args.comment))
 
     try:
         runner = Diffusion(args, config)
-        runner.sample(args.simplified)
+        runner.sample()
     except Exception:
         logging.error(traceback.format_exc())
 

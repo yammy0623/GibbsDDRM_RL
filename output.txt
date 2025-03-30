@@ -1,0 +1,4 @@
+Dataset has size 1000
+Start from 0
+PSNR: 26.10
+PSNR: 26.00

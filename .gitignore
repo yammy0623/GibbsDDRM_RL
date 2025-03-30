@@ -22,3 +22,8 @@ exp/image_samples/*
 
 log*.txt
 nohup.out
+
+exp/
+model/
+tensorboard_log/
+wandb/

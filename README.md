@@ -43,7 +43,7 @@ git clone https://github.com/LeviBorodenko/motionblur.git
 
 Install the required packages using the provided YAML file:
 ```
-conda env create -f requirement.yml
+conda env create -f environment.yml
 ```
 
 Activate the conda environment

@@ -101,6 +101,10 @@ class DeblurringArbitral2D(H_functions):
         temp = self.Vt(vec)
         singulars = self.singulars()
         ret = self.U(singulars * temp[:, :singulars.shape[1]])
+        # print(f"ret shape: {ret.shape}")
+        # print(f"singulars shape: {singulars.shape}")
+        # print(f"temp shape: {temp.shape}")
+        # print(f"vec shape: {vec.shape}")
 
         return ret
 
