@@ -29,6 +29,8 @@ def sample_gibbsddrm(x, seq, model, b, H_funcs, y_0, sigma_0, etaB, etaA, etaC, 
         #iterate over the timesteps
         max_steps = seq.stop
         cnt = 0
+
+
         for i, j in tqdm(zip(reversed(seq), reversed(seq_next))):
 
             xt = xs[-1].to('cuda')
@@ -68,7 +70,6 @@ def sample_gibbsddrm(x, seq, model, b, H_funcs, y_0, sigma_0, etaB, etaA, etaC, 
 
                     U_t_y, singulars, Sigma, Sig_inv_U_t_y, init_y = calc_vars_for_xupdate(H_funcs, x, seq, b,  y_0, sigma_0, y_0s, x0_t)                    
                     xt_next = update_x(x, H_funcs, U_t_y, sigma_0, singulars, Sigma, Sig_inv_U_t_y, xt, x0_t, et, t, at, at_next, cnt, etaA, etaB, etaC, etaD)
-                    
 
             x0_preds.append(x0_t.to('cpu'))
             xs.append(xt_next.to('cpu'))
@@ -85,6 +86,8 @@ def calc_vars_for_xupdate(H_funcs, x, seq, b,  y_0, sigma_0, y_0s, x_0 = None):
         they must be updated after the update of phi.
 
     """
+
+   
     bsz = y_0.shape[0]
     
     if H_funcs.conv_shape == "same_interp":
@@ -121,6 +124,8 @@ def calc_vars_for_xupdate(H_funcs, x, seq, b,  y_0, sigma_0, y_0s, x_0 = None):
     V_t_x_init = H_funcs.Vt(x)
     init_y = init_y + remaining_s * V_t_x_init
     init_y = init_y / largest_sigmas.view(largest_sigmas.shape[0], -1)
+
+
     return U_t_y, singulars, Sigma, Sig_inv_U_t_y,init_y
 
 def update_x(x, H_funcs, U_t_y, sigma_0, singulars, Sigma, Sig_inv_U_t_y, xt, x0_t, et, t, at, at_next, cnt, etaA, etaB, etaC, etaD):

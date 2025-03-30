@@ -363,9 +363,9 @@ class DeblurringArbitral2D(H_functions):
         return y_fftconv_clip
 
     def interp_y_0(self, y_0, x_0, sigma_0):
-
+        
         x_fft = torch.fft.fft2(x_0.reshape(x_0.shape[0], self.channels, self.img_dim, self.img_dim), (self.fft2_size, self.fft2_size), norm="ortho")
-
+        
         k_fft = torch.fft.fft2(self.kernel, (self.fft2_size, self.fft2_size), norm="ortho")[:, None, :, :]
 
         y_fft = k_fft * x_fft
