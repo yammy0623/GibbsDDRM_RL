@@ -277,9 +277,8 @@ def main():
         "target_steps": args.target_steps,
         "threshold": 0.9,
         "num_train_envs": 16, # 16
-
-        "epoch_num": 200,
-        "first_stage_epoch_num": 50,
+        "epoch_num": 50,
+        "first_stage_epoch_num": 12,
         "policy_network": "MultiInputPolicy",
         "timesteps_per_epoch": 100,
         "eval_episode_num": 16, # 16

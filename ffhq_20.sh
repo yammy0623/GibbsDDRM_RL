@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=1
 EXP="/tmp2/ICML2025/ffhq"
 
 SEED=232
@@ -7,7 +7,6 @@ PATHY="ffhq"
 IMAGE_FOLDER="/tmp2/ICML2025/ddnm_rl/"$PATHY
 DEG="deblur_arbitral"
 # train ours (1st subtask)
-export CUDA_VISIBLE_DEVICES=1
 STEP=20
 
 # train ours (1st subtask)

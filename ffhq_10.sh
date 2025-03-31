@@ -7,7 +7,6 @@ PATHY="ffhq"
 IMAGE_FOLDER="/tmp2/ICML2025/ddnm_rl/"$PATHY
 DEG="deblur_arbitral"
 # train ours (1st subtask)
-export CUDA_VISIBLE_DEVICES=1
 STEP=10
 
 # train ours (1st subtask)

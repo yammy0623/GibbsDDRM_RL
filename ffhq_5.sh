@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=1
 EXP="/tmp2/ICML2025/ffhq"
 
 SEED=232
@@ -7,9 +7,7 @@ PATHY="ffhq"
 IMAGE_FOLDER="/tmp2/ICML2025/ddnm_rl/"$PATHY
 DEG="deblur_arbitral"
 # train ours (1st subtask)
-export CUDA_VISIBLE_DEVICES=0
 STEP=5
-
 # train ours (1st subtask)
 python train.py --ni --config $CONFIG --exp $EXP --path_y $PATHY --eta 0.85 --deg $DEG --deg_scale 4 --sigma_y 0. -i $PATHY"_"$DEG"_""$STEP" --target_steps $STEP --seed $SEED
 # # eval ours (1st subtask)
