@@ -292,14 +292,14 @@ def main():
 
     }
     
-    my_config['run_id'] = f'{my_config["task"]}_{args.path_y}_{my_config["model_mode"]}_A2C_env_{my_config["num_train_envs"]}_steps_{my_config["target_steps"]}'
+    my_config['run_id'] = f'{my_config["task"]}_{args.path_y}_{my_config["model_mode"]}_A2C_env_{my_config["num_train_envs"]}_steps_{my_config["target_steps"]}_less'
     if args.baseline == False:
         if args.second_stage:
             my_config['run_id'] += '_S2'
         else:
             my_config['run_id'] += '_S1'
 
-    my_config['save_path'] = f'model/{my_config["task"]}_{args.path_y}_{my_config["model_mode"]}_A2C_{my_config["target_steps"]}'
+    my_config['save_path'] = f'model/{my_config["task"]}_{args.path_y}_{my_config["model_mode"]}_A2C_{my_config["target_steps"]}_less'
     if WANDB:
         run = wandb.init(
             project="final",

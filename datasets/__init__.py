@@ -11,6 +11,7 @@ import torchvision
 from PIL import Image
 from functools import partial
 
+
 class Crop(object):
     def __init__(self, x1, x2, y1, y2):
         self.x1 = x1
@@ -161,17 +162,17 @@ def get_dataset(args, config):
     elif config.data.dataset == 'FFHQ':
         if config.data.out_of_dist:
             dataset = torchvision.datasets.ImageFolder(
-                    os.path.join(args.exp, "datasets", "ood_ffhq"),
+                    os.path.join(args.exp, "datasets", "test_ffhq"),
                     transform=transforms.Compose([transforms.Resize([config.data.image_size, config.data.image_size]),
                                                 transforms.ToTensor()])
         )
             test_dataset = dataset
         else:
             dataset = torchvision.datasets.ImageFolder(
-                os.path.join(args.exp, "datasets", "ffhq"),
+                os.path.join(args.exp, "datasets", "train_ffhq"),
                 transform=transforms.Compose([transforms.Resize([config.data.image_size, config.data.image_size]),
                                               transforms.ToTensor()]))
-            test_dataset = dataset
+            # test_dataset = dataset
     elif config.data.dataset == 'ImageNet':
         # only use validation dataset here
         
@@ -211,6 +212,27 @@ def get_dataset(args, config):
                                               transforms.ToTensor()])
             )
             test_dataset = dataset
+    elif config.data.dataset == "GoPro":
+        from datasets.gopro import GoProDataset
+        transform = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Resize([config.data.image_size, config.data.image_size]),
+            transforms.ToTensor()
+        ])
+
+        if config.data.out_of_dist:
+            gopro_dataset = GoProDataset(root_dir=os.path.join(args.exp, 'datasets/test'), data_type="blur_gamma", transform=transform)
+            dataset = gopro_dataset
+            test_dataset = gopro_dataset
+        else:
+            # train
+            test_dataset = GoProDataset(root_dir=os.path.join(args.exp, 'datasets/train'), data_type="blur_gamma", transform=transform)
+            
+            # test
+            train_dataset = GoProDataset(root_dir=os.path.join(args.exp, 'datasets/test'), data_type="blur_gamma", transform=transform)
+            
+
+            dataset = train_dataset
     
     else:
         dataset, test_dataset = None, None

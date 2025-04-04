@@ -1,0 +1,67 @@
+data:
+    dataset: "GoPro"
+    category: ""
+    image_size: 256
+    channels: 3
+    logit_transform: false
+    uniform_dequantization: false
+    gaussian_dequantization: false
+    random_flip: true
+    rescaled: true
+    num_workers: 16
+    out_of_dist: False
+
+model:
+    type: "openai"
+    in_channels: 3
+    out_channels: 3
+    num_channels: 256
+    num_heads: 4
+    num_res_blocks: 2
+    attention_resolutions: "32,16,8"
+    dropout: 0.0
+    resamp_with_conv: True
+    learn_sigma: True
+    use_scale_shift_norm: true
+    use_fp16: true
+    resblock_updown: true
+    num_heads_upsample: -1
+    var_type: 'fixedsmall'
+    num_head_channels: 64
+    image_size: 256
+    class_cond: false
+    use_new_attention_order: false
+
+diffusion:
+    beta_schedule: linear
+    beta_start: 0.0001
+    beta_end: 0.02
+    num_diffusion_timesteps: 1000
+
+sampling:
+    batch_size: 1
+    last_only: True
+
+deblur:
+    sigma_0 : 0.02
+    timesteps : 100
+    etaA : 0.0
+    etaB : 0.9
+    etaC : 0.8
+    etaD : 0.8
+    kernel_type : motionblur
+    kernel_corruption : gauss_init
+    kernel_corruption_coef : 0.00000
+    iter_DDRM : 1
+    iter_Hupdate : 3
+    iter_optim : 500
+    lr_Hupdate : 1.0e-11
+    alg_Hupdate : "langevin"
+    reg_H_gamma : 1000.0
+    reg_H_type : norm
+    Hupdate_start : 0.7
+    resample_after_Hupdate : True
+    conv_type : same_interp
+
+logger:
+    enable_log: True

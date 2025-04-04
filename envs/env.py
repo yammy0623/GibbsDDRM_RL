@@ -61,7 +61,7 @@ class DiffusionEnv(gym.Env):
         torch.manual_seed(seed)
         torch.random.manual_seed(seed)
     
-    def reset(self, seed=None, options=None):
+    def reset(self, seed=None, dataset=None):
         if seed is not None:
             self.seed(seed)
         self.current_step_num = 0
@@ -71,9 +71,15 @@ class DiffusionEnv(gym.Env):
         # self.x_orig, self.classes = self.DM.dataset[self.data_idx]
         # self.x_orig = self.x_orig.unsqueeze(0)
 
-        val_iter = iter(self.DM.val_loader)
-        self.x_orig, self.classes = next(val_iter)
-        self.x, self.y,  self.x_orig, self.A_inv_y = self.DM.preprocess(self.x_orig, self.data_idx)
+        data_iter = iter(self.DM.data_loader)
+        if self.DM.config.data.dataset == "GoPro":
+            self.y, self.x_orig = next(data_iter)
+            self.y = data_transform(self.DM.config, self.y)
+            self.x, _, self.x_orig, self.A_inv_y = self.DM.preprocess(self.x_orig, self.data_idx)
+            self.y = self.y.to(self.x_orig.device)
+        else:
+            self.x_orig, self.classes = next(data_iter)
+            self.x, self.y, self.x_orig, self.A_inv_y = self.DM.preprocess(self.x_orig, self.data_idx)
        
         ddim_x = self.x.clone()
         ddim_x0_t = self.A_inv_y.clone()

@@ -10,7 +10,7 @@ import numpy as np
 import torch.utils.tensorboard as tb
 
 # from runners.diffusion import Diffusion
-from runners.diffusion import Diffusion
+from runners.my_diffusion import MyDiffusion
 
 torch.set_printoptions(sci_mode=False)
 
@@ -19,6 +19,9 @@ torch.set_printoptions(sci_mode=False)
 def parse_args_and_config():
     parser = argparse.ArgumentParser(description=globals()["__doc__"])
 
+    parser.add_argument(
+        "--train", action="store_true", help="True if training, False if testing"
+    )
     parser.add_argument(
         "--config", type=str, required=True, help="Path to the config file"
     )
@@ -198,7 +201,7 @@ def main():
     args, config = parse_args_and_config()
 
     try:
-        runner = Diffusion(args, config)
+        runner = MyDiffusion(args, config)
         runner.sample(args.simplified)
     except Exception:
         logging.error(traceback.format_exc())

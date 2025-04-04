@@ -92,7 +92,8 @@ class MyDiffusion(object):
         else:
             args.subset_start = 0
             args.subset_end = len(test_dataset)
-        self.dataset = dataset
+
+        self.dataset = dataset # train dataset
         self.test_dataset = test_dataset 
 
         print(f'Dataset has size {len(test_dataset)}')   
@@ -214,16 +215,37 @@ class MyDiffusion(object):
 
         g = torch.Generator()
         g.manual_seed(args.seed)
-        val_loader = data.DataLoader(
-            test_dataset,
+        
+        # if self.args.train:
+        #     data_loader = data.DataLoader(
+        #         dataset,
+        #         batch_size=config.sampling.batch_size,
+        #         shuffle=True,
+        #         num_workers=config.data.num_workers,
+        #         worker_init_fn=seed_worker,
+        #         generator=g,
+        #     )   
+        # else:
+        #     data_loader = data.DataLoader(
+        #         test_dataset,
+        #         batch_size=config.sampling.batch_size,
+        #         shuffle=True,
+        #         num_workers=config.data.num_workers,
+        #         worker_init_fn=seed_worker,
+        #         generator=g,
+        #     )
+        data_loader = data.DataLoader(
+            dataset if self.args.train else test_dataset,
             batch_size=config.sampling.batch_size,
             shuffle=True,
             num_workers=config.data.num_workers,
             worker_init_fn=seed_worker,
             generator=g,
         )
-        
-        self.val_loader = val_loader
+            
+
+
+        self.data_loader = data_loader
         ## get degradation matrix ##
         deg = args.deg
         H_funcs = None
@@ -451,7 +473,7 @@ def calc_vars_for_xupdate(H_funcs, b, y_0, sigma_0, y_0s, x=None, x_0 = None, st
         they must be updated after the update of phi.
 
     """
-        # x 是定值，USV會變
+
    
     bsz = y_0.shape[0]
     # print("device", y_0.device)

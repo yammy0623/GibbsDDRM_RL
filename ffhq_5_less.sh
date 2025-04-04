@@ -15,4 +15,4 @@ STEP=5
 # train ours (2nd subtask)
 # python train_less.py --ni --config $CONFIG --exp $EXP --path_y $PATHY --eta 0.85 --deg $DEG --deg_scale 4 --sigma_y 0. -i $PATHY"_"$DEG"_""$STEP""_less" --target_steps $STEP --second_stage --seed $SEED
 # # eval ours
-python eval.py --ni --config $CONFIG --exp $EXP --path_y $PATHY --eta 0.85 --deg $DEG --deg_scale 4 --sigma_y 0. -i $PATHY"_"$DEG"_""$STEP""eval_less" --target_steps $STEP --eval_model_name $DEG"_"$PATHY"_2_agents_A2C_""$STEP" >> "model/$DEG"_"$PATHY""_2_agents_A2C_""$STEP""/sub2.txt"
+python eval.py --ni --config $CONFIG --exp $EXP --path_y $PATHY --eta 0.85 --deg $DEG --deg_scale 4 --sigma_y 0. -i $PATHY"_"$DEG"_""$STEP""eval_less" --target_steps $STEP --eval_model_name $DEG"_${PATHY}_2_agents_A2C_${STEP}" >> "model/${DEG}_${PATHY}_2_agents_A2C_${STEP}/sub2.txt"

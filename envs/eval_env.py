@@ -62,9 +62,16 @@ class EvalDiffusionEnv(gym.Env):
         self.time_step_sequence = []
         self.action_sequence = []
         # self.x_orig, self.classes = self.DM.test_dataset[self.data_idx]
-        val_iter = iter(self.DM.val_loader)
-        self.x_orig, self.classes = next(val_iter)
-        self.x, self.y,  self.x_orig, self.A_inv_y = self.DM.preprocess(self.x_orig, self.data_idx)
+        
+        data_iter = iter(self.DM.data_loader)
+        if self.DM.config.data.dataset == "GoPro":
+            self.y, self.x_orig = next(data_iter)
+            self.y = data_transform(self.DM.config, self.y)
+            self.x, _, self.x_orig, self.A_inv_y = self.DM.preprocess(self.x_orig, self.data_idx)
+       
+        else:
+            self.x_orig, self.classes = next(data_iter)
+            self.x, self.y, self.x_orig, self.A_inv_y = self.DM.preprocess(self.x_orig, self.data_idx)
        
         self.x0_t = self.A_inv_y.clone()
 
@@ -173,6 +180,9 @@ class EvalDiffusionEnv(gym.Env):
         # Increase number of steps
         self.current_step_num += 1
         self.cnt += 1
+
+        # print("t = ", t)
+        save_fig(self.DM.config, self.x0_t, f"x0_t_{self.data_idx}.png", self.DM.args.image_folder)
        
         return observation, reward, done, truncate, info
 
@@ -192,3 +202,10 @@ class EvalDiffusionEnv(gym.Env):
     def render(self, mode='human', close=False):
         # This could visualize the current state if necessary
         pass
+
+import torchvision.utils as tvu
+
+def save_fig(config, x, file_name, image_folder):
+    tvu.save_image(
+        inverse_data_transform(config, x), os.path.join(image_folder, file_name)
+    )
