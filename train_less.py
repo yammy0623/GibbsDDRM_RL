@@ -276,16 +276,9 @@ def main():
         "algorithm": A2C,
         "target_steps": args.target_steps,
         "threshold": 0.9,
-<<<<<<< HEAD
-        "num_train_envs": 1, # 16
-
-        "epoch_num": 200,
-        "first_stage_epoch_num": 50,
-=======
         "num_train_envs": 16, # 16
         "epoch_num": 50,
         "first_stage_epoch_num": 12,
->>>>>>> c2d16ca2560ebf65b5af5341f60d6144578a40bd
         "policy_network": "MultiInputPolicy",
         "timesteps_per_epoch": 100,
         "eval_episode_num": 16, # 16
