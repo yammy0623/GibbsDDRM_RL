@@ -17,7 +17,7 @@ from main import parse_args_and_config
 from runners.my_diffusion import MyDiffusion
 
 th.set_printoptions(sci_mode=False)
-WANDB=False
+WANDB=True
 
 warnings.filterwarnings("ignore")
 register(
@@ -276,10 +276,16 @@ def main():
         "algorithm": A2C,
         "target_steps": args.target_steps,
         "threshold": 0.9,
+<<<<<<< HEAD
         "num_train_envs": 1, # 16
 
         "epoch_num": 200,
         "first_stage_epoch_num": 50,
+=======
+        "num_train_envs": 16, # 16
+        "epoch_num": 50,
+        "first_stage_epoch_num": 12,
+>>>>>>> c2d16ca2560ebf65b5af5341f60d6144578a40bd
         "policy_network": "MultiInputPolicy",
         "timesteps_per_epoch": 100,
         "eval_episode_num": 16, # 16
@@ -300,7 +306,11 @@ def main():
         else:
             my_config['run_id'] += '_S1'
 
+<<<<<<< HEAD
     my_config['save_path'] = f'model/{my_config["task"]}_{args.path_y}_{my_config["model_mode"]}_A2C_{my_config["target_steps"]}_less'
+=======
+    my_config['save_path'] = f'model/{my_config["task"]}_{args.path_y}_{my_config["model_mode"]}_A2C_{my_config["target_steps"]}'
+>>>>>>> c2d16ca2560ebf65b5af5341f60d6144578a40bd
     if WANDB:
         run = wandb.init(
             project="final",

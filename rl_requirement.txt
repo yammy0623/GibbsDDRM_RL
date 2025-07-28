@@ -17,4 +17,4 @@ scikit-image
 diffusers
 
 
-pip install scikit-image gymnasium==0.29.1 Pillow==10.4.0 stable_baselines3==2.3.2 six==1.16.0 
+pip install scikit-image gymnasium==0.29.1 Pillow==10.4.0 stable_baselines3==2.3.2 six==1.16.0  numpy==2.1.2 wandb torchvision==0.21.0 tqdm rich

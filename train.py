@@ -17,7 +17,7 @@ from main import parse_args_and_config
 from runners.my_diffusion import MyDiffusion
 
 th.set_printoptions(sci_mode=False)
-WANDB=False
+WANDB=True
 
 warnings.filterwarnings("ignore")
 register(
