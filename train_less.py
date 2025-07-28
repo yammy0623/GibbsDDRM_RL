@@ -299,11 +299,7 @@ def main():
         else:
             my_config['run_id'] += '_S1'
 
-<<<<<<< HEAD
-    my_config['save_path'] = f'model/{my_config["task"]}_{args.path_y}_{my_config["model_mode"]}_A2C_{my_config["target_steps"]}_less'
-=======
     my_config['save_path'] = f'model/{my_config["task"]}_{args.path_y}_{my_config["model_mode"]}_A2C_{my_config["target_steps"]}'
->>>>>>> c2d16ca2560ebf65b5af5341f60d6144578a40bd
     if WANDB:
         run = wandb.init(
             project="final",
